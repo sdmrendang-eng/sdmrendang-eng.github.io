@@ -18,7 +18,7 @@ const MONEY_DOMAIN = "https://lastoutline.com";
 
 // 🎙️ DOMAIN TEMPAT MENARUH RSS DI CLOUDFLARE (Tempat penampung aset musik & file redirects)
 // PASTIKAN kamu selalu mengubah ini sesuai domain Cloudflare Pages baru hasil fork-mu!
-const ASSET_URL = "https://sdmrendang-eng.github.io"; 
+const ASSET_URL = "https://sdmrendang-eng-github-io.pages.dev"; 
 
 // 📝 DAFTAR 19 DOMAIN EMAIL KAMU
 const LIST_EMAIL_DOMAINS = [
