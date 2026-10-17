@@ -7,7 +7,7 @@ const { faker } = require('@faker-js/faker');
 // CONFIGURASI UTAMA AUTOMATION MULTI-DOMAIN
 // ==================================================================
 // NEW CAMPAIGN ID TO PREVENT DUPLICATE RSS ON NEW PAGES
-const DEPLOYMENT_ID = "NEW_PAGES_BATCH_023"; // Change this every time you deploy a new Pages!
+const DEPLOYMENT_ID = "NEW_PAGES_BATCH_024"; // Change this every time you deploy a new Pages!
 
 const POSTS_PER_PAGE = 1000;
 const MASTER_FILE_SIZE = 200179; 
@@ -18,7 +18,7 @@ const MONEY_DOMAIN = "https://lastoutline.com";
 
 // 🎙️ DOMAIN TEMPAT MENARUH RSS DI CLOUDFLARE (Tempat penampung aset musik & file redirects)
 // PASTIKAN kamu selalu mengubah ini sesuai domain Cloudflare Pages baru hasil fork-mu!
-const ASSET_URL = "https://ompreng.brocenter.co.uk"; 
+const ASSET_URL = "https://sdmrendang-eng.github.io"; 
 
 // 📝 DAFTAR 19 DOMAIN EMAIL KAMU
 const LIST_EMAIL_DOMAINS = [
