@@ -1,0 +1,37 @@
+name: Auto Generate RSS Feeds
+
+on:
+  # 1. Pemicu: Hanya jalan jika dieksekusi manual dari tab "Actions" di GitHub
+  workflow_dispatch:
+
+jobs:
+  build-and-generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Langkah 1: Ambil semua file kode dari repositori lu
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Langkah 2: Siapkan lingkungan Node.js di server GitHub
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # NEW: Install Dependencies (Faker library) so the runner knows about it
+    - name: Install Node Modules
+      run: npm install @faker-js/faker
+
+    # Langkah 3: Eksekusi skrip generator utama lu
+    - name: Run Master RSS Generator
+      run: node master.js
+
+    # Langkah 4: Simpan & Commit kembali file JSON dan XML yang baru dibuat ke GitHub
+    - name: Commit and Push Changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        # git add output_xml/ generated_feeds.json
+        git add output_*/ generated_feeds.json
+        git diff --staged --quiet || (git commit -m "🤖 Auto-generated RSS feeds and JSON log" && git push)
