@@ -30,7 +30,7 @@ const LIST_EMAIL_DOMAINS = [
 "lemper.co.uk",
 "lemper.org.uk",
 "shopee-cod.my.id",
-"smilespirit.co.uk
+"smilespirit.co.uk"
 ];
 
 // --- SPINTAX CONFIG (AMAZON COMPLIANCE & GERILYA MODE - FULL VERSION) ---
