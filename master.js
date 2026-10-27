@@ -7,7 +7,7 @@ const { faker } = require('@faker-js/faker');
 // CONFIGURASI UTAMA AUTOMATION MULTI-DOMAIN
 // ==================================================================
 // NEW CAMPAIGN ID TO PREVENT DUPLICATE RSS ON NEW PAGES
-const DEPLOYMENT_ID = "NEW_PAGES_BATCH_024"; // Change this every time you deploy a new Pages!
+const DEPLOYMENT_ID = "NEW_PAGES_BATCH_028"; // Change this every time you deploy a new Pages!
 
 const POSTS_PER_PAGE = 1000;
 const MASTER_FILE_SIZE = 200179; 
@@ -22,15 +22,16 @@ const ASSET_URL = "https://sdmrendang-eng-github-io.pages.dev";
 
 // 📝 DAFTAR 19 DOMAIN EMAIL KAMU
 const LIST_EMAIL_DOMAINS = [
-"kiwil.my.id",
-"kopyor.co.uk",
-"kopyor.uk",
-"kuntrink.co.uk",
-"kuntrink.uk",
-"lemper.co.uk",
-"lemper.org.uk",
-"shopee-cod.my.id",
-"smilespirit.co.uk"
+"bokklastread.co.uk",
+"brocenter.co.uk",
+"brocenter.uk",
+"cantikul.my.id",
+"cengeng.co.uk",
+"dalbankeak.co.uk",
+"gembul.co.uk",
+"gentonk.co.uk",
+"getpdfbook.co.uk",
+"getpdfbook.uk"
 ];
 
 // --- SPINTAX CONFIG (AMAZON COMPLIANCE & GERILYA MODE - FULL VERSION) ---
@@ -128,7 +129,7 @@ function main() {
 
         faker.seed(stringToHash(DEPLOYMENT_ID + "folder_seed"));
         const folderFirstName = faker.person.firstName().replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-        const DYNAMIC_FOLDER_NAME = `output_${folderFirstName}`;
+        const DYNAMIC_FOLDER_NAME = `ISI_${folderFirstName}`;
         
         const outputFolder = path.join(__dirname, DYNAMIC_FOLDER_NAME);
 
@@ -166,9 +167,11 @@ function main() {
         sqlFiles.forEach((sqlFilename, index) => {
             const domainIndex = index % LIST_EMAIL_DOMAINS.length;
             const targetDomain = LIST_EMAIL_DOMAINS[domainIndex];
-            
+
+
             const baseName = path.basename(sqlFilename, '.sql');
-            const outputXmlFilename = `RSS-${baseName}.xml`;
+            const nomor = baseName.replace(/\D/g, ''); 
+            const outputXmlFilename = `Kampretoz-${folderFirstName}-${nomor || index}.xml`;
 
             console.log(`[⏳] [${index + 1}/${sqlFiles.length}] Processing ${sqlFilename} ──► 📧 domain: ${targetDomain}`);
 
@@ -247,31 +250,44 @@ function main() {
 <podcast:guid>${channelUUID}</podcast:guid>\n`;
             OLD CODE END */
 
-            // NEW CODE: Exact copy of the structural style from the successful podcasts.com reference
-            let xml = `<?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+            // NEW CODE: SOUNDON COMMERCIAL STYLE RSS ARCHITECTURE
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:googleplay="http://www.google.com/schemas/play-podcasts/1.0" xmlns:soundon="http://soundon.fm/spec/podcast-1.0">
 <channel>
-<title>${cdata(dynamicFeedTitle)}</title>
+<title><![CDATA[${xmlSafe(dynamicFeedTitle)}]]></title>
+<description><![CDATA[${xmlSafe(dynamicFeedDesc)}]]></description>
 <link>${ASSET_URL}</link>
-<description>${cdata(dynamicFeedDesc)}</description>
-<itunes:summary>${cdata(dynamicFeedDesc)}</itunes:summary>
-<itunes:type><![CDATA[Episodic]]></itunes:type>
 <image>
-    <title>${cdata(dynamicFeedTitle)}</title>
-    <link>${ASSET_URL}</link>
     <url>${xmlSafe(channelCoverUrl)}</url>
+    <title>${xmlSafe(dynamicFeedTitle)}</title>
+    <link>${ASSET_URL}</link>
 </image>
-<itunes:image href="${xmlSafe(channelCoverUrl)}"/>
+<generator>SoundOn</generator>
+<lastBuildDate>${lastBuildDate}</lastBuildDate>
+<atom:link href="${xmlSafe(FEED_URL)}" rel="self" type="application/rss+xml"/>
+<copyright><![CDATA[${xmlSafe(authorNameClean)}]]></copyright>
+<language><![CDATA[en]]></language>
+<category><![CDATA[Arts]]></category>
+<category><![CDATA[Books]]></category>
+<soundon:id>${channelUUID}</soundon:id>
+<soundon:searchId>${channelUUID}</soundon:searchId>
+<soundon:deleted>no</soundon:deleted>
+<soundon:createdAt>${new Date().toISOString()}</soundon:createdAt>
+<soundon:updatedAt>${new Date().toISOString()}</soundon:updatedAt>
+<soundon:enableProductPage>false</soundon:enableProductPage>
+<soundon:enableSubscription>false</soundon:enableSubscription>
+<itunes:type>Episodic</itunes:type>
+<itunes:complete>no</itunes:complete>
+<itunes:block>no</itunes:block>
 <itunes:author><![CDATA[${xmlSafe(authorNameClean)}]]></itunes:author>
+<itunes:summary/>
 <itunes:owner>
     <itunes:name><![CDATA[${xmlSafe(authorNameClean)}]]></itunes:name>
-    <itunes:email>${xmlSafe(DYNAMIC_EMAIL)}</itunes:email>
+    <itunes:email><![CDATA[${xmlSafe(DYNAMIC_EMAIL)}]]></itunes:email>
 </itunes:owner>
-<itunes:block>No</itunes:block>
-<itunes:complete>No</itunes:complete>
-<itunes:category text="Arts"><itunes:category text="Books"/></itunes:category>
-<language>en</language>
-<copyright>${xmlSafe(authorNameClean)}</copyright>\n`;
+<itunes:image href="${xmlSafe(channelCoverUrl)}"/>
+<itunes:explicit>no</itunes:explicit>
+<itunes:category text="Arts"/>\n`;
 
             rows.forEach((post, i) => {
                 const audioUrl = `${ASSET_URL}/amz/${post.KodeUnik}.mp3`; 
@@ -283,6 +299,7 @@ function main() {
 
                 const timeOffset = Math.floor((i / rows.length) * WINDOW_MS); 
                 const pubDate = new Date(BASE_TIME_MS - timeOffset).toUTCString(); 
+                const isoDate = new Date(BASE_TIME_MS - timeOffset).toISOString(); // Untuk tag soundon
 
                 const isMultiLang = (stringToHash(seed + "langType") % 100) < 50; 
                 let awalan = isMultiLang ? spinTextStable(MULTI_LANG_PREFIX, seed + "prefix") : spinTextStable(SPINTAX_PREFIX, seed + "prefix"); 
@@ -293,11 +310,9 @@ function main() {
                 if (backlinkList.length > 0) {
                     const linkIndex = stringToHash(seed + "pinterest_pick") % backlinkList.length;
                     const randomPinterestUrl = backlinkList[linkIndex];
-                    
                     const pIntro = spinTextStable("{To view the visual gallery|For book cover art|To see related illustrations|Check out our visual board|Discover the visual companion}", seed + "pintro");
                     const pAnchor = spinTextStable("{View Gallery|Visit Other Podcast|See Art|Visual Guide|Another Podcast}", seed + "panchor");
-                    
-                    pinterestPart = `<hr/><p>📌 ${pIntro}: <a href="${randomPinterestUrl}">${pAnchor} : ${randomPinterestUrl}</a></p>`; 
+                    pinterestPart = `📌 ${pIntro}: <a href="${randomPinterestUrl}">${randomPinterestUrl}</a>`; 
                 }
 
                 const authorSafe = post.Author || "Unknown Author"; 
@@ -305,35 +320,39 @@ function main() {
                 const descEnd = spinTextStable(DESC_SUFFIX, seed + "descEnd"); 
                 const rawDescText = `${descStart} ${judulAsli} by ${authorSafe} ${descEnd}. Tags: ${spinTextStable(DESC_TAGS, seed + "descTags")}`; 
                 const ctaPrefix = spinTextStable("{Learn More|Read the Review|Explore the Book|Discover More|See the Full Review|Read More Details|Explore This Book|Find Out More|View Book Details|Continue Reading|See What It’s About|Explore the Story|Check Out the Review|Learn More About This Book|Discover the Details}", seed + "cta"); 
-                const liveLinkText = `📥 ${ctaPrefix}: ${judulAsli}`; 
+                const liveLinkText = `👉 📥 ${ctaPrefix}: ${judulAsli}`; 
 
-                const htmlContent = `
-          <p>👉 <strong><a href="${postmoney}">${liveLinkText} : ${postmoney} </a></strong></p>
-          <hr/>
-          <p>${rawDescText}</p>
-          ${pinterestPart}
-        `.trim();
+                // HTML Content untuk content:encoded
+                const htmlContent = `<p><br />${liveLinkText} : <a href="${postmoney}">${postmoney.replace('https://', '')}</a> ${rawDescText} ${pinterestPart}</p>`.trim();
+                
+                // Plain Text Content untuk description & itunes:summary (menghapus tag HTML)
+                const plainTextContent = `${liveLinkText} : ${postmoney.replace('https://', '')} ${rawDescText} ${pinterestPart.replace(/<[^>]*>?/gm, '')}`.trim();
                 
                 let episodeImage = post.Image ? post.Image : channelCoverUrl; 
-
                 const episodeGUID = generateUUID(seed + (post.KodeUnik || i));
-
-                // NEW CODE: Using exact item structure and duration format (HH:MM:SS) from the successful reference
-                const formattedDuration = MASTER_DURATION < 10 ? `00:00:0${MASTER_DURATION}` : `00:00:${MASTER_DURATION}`;
+                
+                // Manipulasi URL Enclosure seperti Soundon (tambah timestamp dinamis dan length=1)
+                const timestampParam = new Date().getTime() - timeOffset;
+                const dynamicEnclosureUrl = `${audioUrl}?timestamp=${timestampParam}`;
 
                 xml += `<item>
-<title>${cdata(finalTitle)}</title>
-<itunes:title>${cdata(finalTitle)}</itunes:title>
-<description>${cdata(htmlContent)}</description>
-<itunes:summary>${cdata(htmlContent)}</itunes:summary>
+<title><![CDATA[${xmlSafe(finalTitle)}]]></title>
+<description><![CDATA[${xmlSafe(plainTextContent)}]]></description>
 <link>${postUrl}</link>
+<guid isPermaLink="false">${episodeGUID}</guid>
+<dc:creator><![CDATA[${xmlSafe(authorNameClean)}]]></dc:creator>
 <pubDate>${pubDate}</pubDate>
-<enclosure url="${audioUrl}" type="audio/mpeg" length="${MASTER_FILE_SIZE}"/>
-<author>${xmlSafe(authorNameClean)}</author>
-<itunes:author>${xmlSafe(authorNameClean)}</itunes:author>
+<enclosure url="${dynamicEnclosureUrl}" length="1" type="audio/mpeg"/>
+<content:encoded><![CDATA[${htmlContent}]]></content:encoded>
+<soundon:id>${episodeGUID}</soundon:id>
+<soundon:createdAt>${isoDate}</soundon:createdAt>
+<soundon:updatedAt>${isoDate}</soundon:updatedAt>
+<soundon:exclusive>public</soundon:exclusive>
+<itunes:summary><![CDATA[${xmlSafe(plainTextContent)}]]></itunes:summary>
+<itunes:author><![CDATA[${xmlSafe(authorNameClean)}]]></itunes:author>
 <itunes:episodeType>Full</itunes:episodeType>
-<itunes:duration>${formattedDuration}</itunes:duration>
-<guid>${episodeGUID}</guid>
+<itunes:explicit>no</itunes:explicit>
+<itunes:duration>${MASTER_DURATION}</itunes:duration>
 <itunes:image href="${xmlSafe(episodeImage)}"/>
 </item>\n`; 
             });
