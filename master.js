@@ -7,7 +7,7 @@ const { faker } = require('@faker-js/faker');
 // CONFIGURASI UTAMA AUTOMATION MULTI-DOMAIN
 // ==================================================================
 // NEW CAMPAIGN ID TO PREVENT DUPLICATE RSS ON NEW PAGES
-const DEPLOYMENT_ID = "NEW_PAGES_BATCH_028"; // Change this every time you deploy a new Pages!
+const DEPLOYMENT_ID = "NEW_PAGES_BATCH_024"; // Change this every time you deploy a new Pages!
 
 const POSTS_PER_PAGE = 1000;
 const MASTER_FILE_SIZE = 200179; 
