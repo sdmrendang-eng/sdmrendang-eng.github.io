@@ -22,16 +22,15 @@ const ASSET_URL = "https://sdmrendang-eng-github-io.pages.dev";
 
 // 📝 DAFTAR 19 DOMAIN EMAIL KAMU
 const LIST_EMAIL_DOMAINS = [
-"bokklastread.co.uk",
-"brocenter.co.uk",
-"brocenter.uk",
-"cantikul.my.id",
-"cengeng.co.uk",
-"dalbankeak.co.uk",
-"gembul.co.uk",
-"gentonk.co.uk",
-"getpdfbook.co.uk",
-"getpdfbook.uk"
+"kiwil.my.id",
+"kopyor.co.uk",
+"kopyor.uk",
+"kuntrink.co.uk",
+"kuntrink.uk",
+"lemper.co.uk",
+"lemper.org.uk",
+"shopee-cod.my.id",
+"smilespirit.co.uk
 ];
 
 // --- SPINTAX CONFIG (AMAZON COMPLIANCE & GERILYA MODE - FULL VERSION) ---
